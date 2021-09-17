@@ -1,84 +1,49 @@
-import { reactive } from 'vue';
+import { createPinia, defineStore } from 'pinia'
+import axios from 'axios';
 
-// store
-const store = reactive({
-  boards: [],
-});
+export const store = createPinia();
 
-// mutations
-const SET_BOARDS = (boards) => store.boards = boards;
-const SET_THREADS = (boardID, threads) => {
-  store.boards.forEach(b => {
-    if (b.boardID == boardID) {
-      b.threads = threads;
+// useStore could be anything like useUser, useCart
+// the first argument is a unique id of the store across your application
+export const useStore = defineStore('main', {
+  state: () => {
+    return {
+      // all these properties will have their type inferred automatically
+      boards: {},
+      errors: false,
     }
-  });
-};
+  },
+  actions: {
+    async setBoards() {
+      const { data } = await axios.get('https://localhost:5001/api/boards');
 
-const SET_POSTS = (boardID, threadID, posts) => {
-  store.boards.forEach(b => {
-    if (b.boardID == boardID) {
-      b.threads.forEach(t => {
-        if (t.threadID == threadID) {
-          t.posts = posts;
+      data.forEach(board => {
+        this.boards[board.name] = board;
+      });
+
+      if (!data) {
+        this.setErrors(true)
+      }
+    },
+    async setThreads(boardID) {
+      if (!Object.keys(this.boards).length) {
+        await this.setBoards(boardID);
+      }
+
+      const { data } = await axios.get(`https://localhost:5001/api/threads/${boardID}`);
+
+      for (const board in this.boards) {
+        if (Object.hasOwnProperty.call(this.boards, board)) {
+          this.boards[boardID].threads = data.threads;
         }
-      })
+      };
+
+      if (!data) {
+        this.setErrors(true)
+      }
+    },
+    setErrors(errors) {
+      this.errors = errors;
     }
-  });
-};
-
-// actions
-async function setBoards() {
-  const response = await fetch('https://localhost:5001/api/boards');
-
-  if (response.ok) {
-    const data = await response.json();
-
-    SET_BOARDS(data);
   }
-}
-
-async function setThreads(boardID) {
-  const response = await fetch('https://localhost:5001/api/threads');
-
-  if (response.ok) {
-    const data = await response.json();
-    const threads = data.filter(t => t.boardID == boardID);
-
-    SET_THREADS(boardID, threads);
-  }
-}
-
-async function setPosts(boardID, threadID) {
-  const response = await fetch('https://localhost:5001/api/posts');
-
-  if (response.ok) {
-    const data = await response.json();
-    const posts = data.filter(p => p.threadID == threadID);
-
-    SET_POSTS(boardID, threadID, posts);
-  }
-}
-
-// getters
-function getThreads(boardID) {
-  const board = store.boards.find(b => b.boardID == boardID);
-
-  return board.threads;
-}
-
-function getPosts(boardID, threadID) {
-  const board = store.boards.find(b => b.boardID == boardID);
-  const thread = board.threads.find(t => t.threadID == threadID);
-
-  return thread.posts;
-}
-
-export {
-  store,
-  setBoards,
-  setThreads,
-  setPosts,
-  getThreads,
-  getPosts
-}
+})
