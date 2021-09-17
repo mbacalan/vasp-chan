@@ -20,14 +20,14 @@ namespace VASPChan.Controllers
             this.repository = repository;
         }
 
-        [HttpGet]
+        [HttpGet("{ID}", Name = nameof(GetAllPosts))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Post>))]
-        public IActionResult GetAllPosts()
+        public IActionResult GetAllPosts(int ID)
         {
-            return Ok(repository.GetAll());
+            return Ok(repository.GetAll(ID));
         }
 
-        [HttpGet("{ID}", Name = nameof(GetPost))]
+        [HttpGet("post/{ID}", Name = nameof(GetPost))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Post))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetPost(int ID)

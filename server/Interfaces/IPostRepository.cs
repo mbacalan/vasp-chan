@@ -6,7 +6,7 @@ namespace VASPChan.Interfaces
 {
     public interface IPostRepository
     {
-        IQueryable<PostDTO> GetAll();
+        PostListDTO GetAll(int ID);
         PostDTO Get(int ID);
         Task<PostDTO> Create(Post post);
         void Delete(int ID);

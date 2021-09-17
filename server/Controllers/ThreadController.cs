@@ -19,14 +19,14 @@ namespace VASPChan.Controllers
             this.repository = repository;
         }
 
-        [HttpGet]
+        [HttpGet("{board}", Name = nameof(GetAllThreads))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Thread>))]
-        public IActionResult GetAllThreads()
+        public IActionResult GetAllThreads(string board)
         {
-            return Ok(repository.GetAll());
+            return Ok(repository.GetAll(board));
         }
 
-        [HttpGet("{ID}", Name = nameof(GetThread))]
+        [HttpGet("thread/{ID}", Name = nameof(GetThread))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Thread))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetThread(int ID)

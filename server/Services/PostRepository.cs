@@ -15,17 +15,24 @@ namespace VASPChan.Services
             this.context = context;
         }
 
-        public IQueryable<PostDTO> GetAll()
+        public PostListDTO GetAll(int ID)
         {
-            return context.Posts.Select(p =>
-                new PostDTO()
-                {
-                    PostID = p.PostID,
-                    Content = p.Content,
-                    Thread = p.Thread.Title,
-                    ThreadID = p.ThreadID
-                }
-            );
+            Thread thread = context.Threads.Single(t => t.ThreadID == ID);
+
+            return new PostListDTO
+            {
+                ThreadTitle = thread.Title,
+                ThreadDescription = thread.Description,
+                Posts = context.Posts
+                    .Where(p => p.ThreadID == ID)
+                    .Select(p =>
+                        new PostMinimalDTO()
+                        {
+                            PostID = p.PostID,
+                            Content = p.Content,
+                        }
+                    )
+            };
         }
 
         public PostDTO Get(int ID)

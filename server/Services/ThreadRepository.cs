@@ -15,19 +15,25 @@ namespace VASPChan.Services
             this.context = context;
         }
 
-        public IQueryable<ThreadDTO> GetAll()
+        public ThreadListDTO GetAll(string board)
         {
-            return context.Threads.Select(t =>
-                new ThreadDTO()
-                {
-                    ThreadID = t.ThreadID,
-                    Title = t.Title,
-                    Description = t.Description,
-                    Board = t.Board.Name,
-                    BoardID = t.BoardID,
-                    Posts = t.Posts.Select(p => p.PostID).ToList<int>()
-                }
-            );
+            Board activeBoard = context.Boards.Single(b => b.Name == board);
+
+            return new ThreadListDTO {
+                BoardName = activeBoard.Name,
+                BoardDescription = activeBoard.Description,
+                Threads = context.Threads
+                    .Where(t => t.Board.Name == board)
+                    .Select(t =>
+                        new ThreadMinimalDTO()
+                        {
+                            ThreadID = t.ThreadID,
+                            Title = t.Title,
+                            Description = t.Description,
+                            Posts = t.Posts.Select(p => p.PostID).ToList<int>()
+                        }
+                    )
+            };
         }
 
         public ThreadDTO Get(int ID)
@@ -54,7 +60,6 @@ namespace VASPChan.Services
                 ThreadID = thread.ThreadID,
                 Title = thread.Title,
                 Description = thread.Description,
-                Board = thread.Board.Name,
                 BoardID = thread.BoardID
             };
         }

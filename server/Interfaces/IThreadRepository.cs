@@ -7,7 +7,7 @@ namespace VASPChan.Interfaces
 {
     public interface IThreadRepository
     {
-        IQueryable<ThreadDTO> GetAll();
+        ThreadListDTO GetAll(string board);
         ThreadDTO Get(int ID);
         Task<ThreadDTO> Create(Thread thread);
         void Delete(int ID);
