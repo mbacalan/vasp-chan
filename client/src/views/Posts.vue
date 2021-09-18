@@ -53,50 +53,41 @@
   }
 </style>
 
-<script>
+<script setup>
   import { reactive, onMounted } from 'vue';
 
-  export default {
-    props: {
-      id: {
-        type: String,
-        required: true
-      },
-      tid: {
-        type: String,
-        required: true
-      }
+  const props = defineProps({
+    id: {
+      type: String,
+      required: true
     },
-    setup(props) {
-      const state = reactive({
-        thread: {
-          title: "",
-          description: "",
-          posts: []
-        }
-      });
+    tid: {
+      type: String,
+      required: true
+    }
+  });
 
-      onMounted(async () => {
-        const response = await fetch(`https://localhost:5001/api/posts/${props.tid}`);
+  const state = reactive({
+    thread: {
+      title: "",
+      description: "",
+      posts: []
+    }
+  });
 
-        if (response.ok) {
-          const responseJson = await response.json();
+  onMounted(async () => {
+    const response = await fetch(`https://localhost:5001/api/posts/${props.tid}`);
 
-          state.thread.title = responseJson.threadTitle;
-          state.thread.description = responseJson.threadDescription;
-          state.thread.posts = responseJson.posts;
-        }
+    if (response.ok) {
+      const responseJson = await response.json();
 
-        if (!response.status == 200) {
-          setErrors(true)
-        }
-      })
+      state.thread.title = responseJson.threadTitle;
+      state.thread.description = responseJson.threadDescription;
+      state.thread.posts = responseJson.posts;
+    }
 
-
-      return {
-        props,
-        state
-      }
-    },
-  }
+    if (!response.status == 200) {
+      setErrors(true)
+    }
+  })
 </script>

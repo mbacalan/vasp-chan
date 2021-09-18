@@ -43,37 +43,28 @@
   }
 </style>
 
-<script>
+<script setup>
   import { reactive, onMounted } from 'vue';
   import { useStore } from '../store';
 
-  export default {
-    props: {
-      id: {
-        type: String,
-        required: true
-      }
-    },
-    setup(props) {
-      const store = useStore();
-      const state = reactive({
-        board: {
-          name: "",
-          description: "",
-          threads: []
-        }
-      });
+  const props = defineProps({
+    id: {
+      type: String,
+      required: true
+    }
+  });
 
-      onMounted(async () => {
-        await store.setThreads(props.id);
-        state.board = store.boards[props.id];
-      })
+  const store = useStore();
+  const state = reactive({
+    board: {
+      name: "",
+      description: "",
+      threads: []
+    }
+  });
 
-      return {
-        props,
-        store,
-        state
-      }
-    },
-  }
+  onMounted(async () => {
+    await store.setThreads(props.id);
+    state.board = store.boards[props.id];
+  })
 </script>

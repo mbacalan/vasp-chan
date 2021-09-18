@@ -53,33 +53,21 @@
   }
 </style>
 
-<script>
+<script setup>
   import { reactive, onMounted } from 'vue';
   import { useStore } from '../store';
   import { ContentLoader } from 'vue-content-loader'
 
-  export default {
-    components: {
-      ContentLoader
-    },
-    setup() {
-      const store = useStore();
-      const state = reactive({ loading: true });
+  const store = useStore();
+  const state = reactive({ loading: true });
 
-      onMounted(async () => {
-        if (Object.keys(store.boards).length) {
-          state.loading = false;
-          return;
-        }
+  onMounted(async () => {
+    if (Object.keys(store.boards).length) {
+      state.loading = false;
+      return;
+    }
 
-        await store.setBoards();
-        state.loading = false;
-      })
-
-      return {
-        store,
-        state
-      }
-    },
-  }
+    await store.setBoards();
+    state.loading = false;
+  })
 </script>
