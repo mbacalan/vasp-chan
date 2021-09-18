@@ -1,13 +1,13 @@
 <template>
-  <h2 class="thread-title">
+  <h2 class="text-center mb-2 font-bold">
     /{{ state.board.name }}/ - {{ state.board.description }}
   </h2>
 
-  <div class="thread-list">
-    <div v-for="thread in state.board.threads" class="thread">
+  <div class="flex flex-wrap justify-center border border-2 border-dracula-selection">
+    <div v-for="thread in state.board.threads" class="p-2 m-2 w-[160px] h-[160px] text-center text-white">
       <router-link
         :to="{ name: 'posts', params: { id: state.board.name, tid: thread.threadID }}"
-        class="thread__link"
+        class="text-lg font-semibold"
       >
         {{ thread.title }}
       </router-link>
@@ -16,32 +16,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-  .thread-title {
-    text-align: center;
-  }
-
-  .thread-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    border: solid 2px var(--drc-selection);
-  }
-
-  .thread {
-    padding: 8px;
-    margin: 8px;
-    width: 160px;
-    height: 160px;
-    text-align: center;
-    color: #fff;
-  }
-
-  .thread__link {
-    font-size: 18px;
-  }
-</style>
 
 <script setup>
   import { reactive, onMounted } from 'vue';

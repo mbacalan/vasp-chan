@@ -1,11 +1,11 @@
 <template>
-  <div class="main-description">
+  <div class="border-2 border-dracula-selection p-4 mb-2">
     <p>VASPChan is a simple, text-based bulletin board where anyone can post comments.</p>
     <p>There are dedicated boards for various topics and no registration is required to participate.</p>
     <p>Browse boards below and join the fun!</p>
   </div>
 
-  <div class="board-list">
+  <div class="border-2 border-dracula-selection p-4">
     <p v-if="store.errors">
       Oops... something went wrong! Try again later, maybe.
     </p>
@@ -18,7 +18,7 @@
     </content-loader>
 
     <ul v-if="!store.errors">
-      <li v-for="board in store.boards" class="board">
+      <li v-for="board in store.boards" class="mb-2">
         <router-link
           :to="{ name: 'threads', params: { id: board.name }}"
           class="board__link"
@@ -29,29 +29,6 @@
     </ul>
   </div>
 </template>
-
-<style scoped>
-  .main-description {
-    border: solid 2px var(--drc-selection);
-    padding: 16px;
-    margin-bottom: 8px;
-  }
-
-  .board-list {
-    border: solid 2px var(--drc-selection);
-    padding: 16px;
-  }
-
-  .board-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .board {
-    margin-bottom: 8px;
-  }
-</style>
 
 <script setup>
   import { reactive, onMounted } from 'vue';

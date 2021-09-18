@@ -1,21 +1,21 @@
 <template>
-  <div class="post-list">
-    <div class="post-wrapper">
-      <div class="op post">
-        <p class="op__title">
+  <div class="border-2 border-dracula-selection">
+    <div class="w-1/2 mx-auto">
+      <div class="m-2 p-2 bg-dracula-selection">
+        <p class="font-semibold text-lg">
           {{ state.thread.title }}
         </p>
 
-        <p class="op__desc">
+        <p>
           {{ state.thread.description }}
         </p>
       </div>
 
-      <div v-if="!state.thread.posts.length" class="post">
+      <div v-if="!state.thread.posts.length" class="m-2 p-2 bg-dracula-comment">
         Nothing here... yet.
       </div>
 
-      <div v-for="post in state.thread.posts" class="post" :id="post.postID">
+      <div v-for="post in state.thread.posts" class="m-2 p-2 bg-dracula-comment" :id="post.postID">
         <span>
           Anon -
           <a :href="`#${post.postID}`">{{ post.postID }}</a>
@@ -26,32 +26,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-  .post-list {
-    border: solid 2px var(--drc-selection);
-  }
-
-  .post-wrapper {
-    width: 50%;
-    margin: auto;
-  }
-
-  .post {
-    margin: 8px;
-    padding: 8px;
-    background-color: var(--drc-comment);
-  }
-
-  .op {
-    background-color: var(--drc-selection);
-  }
-
-  .op__title {
-    font-weight: 700;
-    font-size: 18px;
-  }
-</style>
 
 <script setup>
   import { reactive, onMounted } from 'vue';
